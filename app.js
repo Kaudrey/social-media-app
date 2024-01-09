@@ -5,12 +5,14 @@ const cors = require('cors')
 const mongoose = require('mongoose')
 
 const userRoutes= require("./routes/user.routes")
+const postRoutes= require("./routes/post.routes")
 
 dotenv.config({path: './.env'})
 
 app.use(cors());
 app.use(express.json())
 app.use("/users",userRoutes)
+app.use("/posts",postRoutes)
 let PORT = process.env.PORT
 mongoose.connect(process.env.DB_URL,{
     useNewUrlParser: true,
