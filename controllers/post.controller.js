@@ -76,3 +76,20 @@ exports.deletePost = async (req, res) => {
       res.status(500).json({ message: "Error deleting post" });
     }
   };
+  exports.getPosts = async (req, res) => {
+    try {
+        const { page = 1, limit = 10 } = req.query;
+
+        const options = {
+            page: parseInt(page),
+            limit: parseInt(limit),
+            sort: { createdAt: -1 }, 
+        };
+
+        const paginatedPosts = await Post.paginate({}, options);
+
+        return createSuccessResponse("Posts retrieved successfully", paginatedPosts, res);
+    } catch (ex) {
+        return serverErrorResponse(ex, res);
+    }
+};
