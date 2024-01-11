@@ -1,6 +1,7 @@
 const { compare, genSalt, hash } = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user.model.js");
+const Post = require("../models/post.model.js")
 const {
   createSuccessResponse,
   errorResponse,
@@ -55,3 +56,50 @@ exports.registerUser = async (req, res) => {
       return serverErrorResponse(ex, res);
     }
   };
+
+  exports.updateUser = async (req, res) =>{
+    try {
+        
+        const { userId } = req.params;
+        const { username, phone, email,password } = req.body;
+
+        const updatedUser = await User.findByIdAndUpdate(
+            
+          userId,
+          { username, phone, email,password },
+          { new: true }
+        );
+    
+        if (!updatedUser) {
+          return res.status(404).json({ message: "User not found" });
+        }
+
+        res.status(200).json(updatedUser);
+    }catch (ex) {
+        return serverErrorResponse(ex, res);
+    }
+}
+
+
+exports.deleteUser = async (req, res) => {
+  try {
+    const authUserId = req.user._id;
+    const { userId } = req.params;
+    if (authUserId !== userId) {
+      return res.status(403).json({ message: "Permission denied. You can only delete your own account." });
+    }
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    await Post.deleteMany({ userId });
+    await user.deleteOne();
+
+    res.status(200).json({ message: "User and associated posts removed from the system" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error removing user and associated from the system" });
+  }
+};
