@@ -2,6 +2,7 @@ const { compare, genSalt, hash } = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user.model.js");
 const Post = require("../models/post.model.js")
+const {sendWelcomeEmail} = require("../utils/emailConfig.js")
 const {
   createSuccessResponse,
   errorResponse,
@@ -19,13 +20,14 @@ exports.registerUser = async (req, res) => {
         _.pick(req.body, ["username", "phone", "email", "password"])
       );
   
-      user.role = "user";
+      // user.role = "user";
   
       const salt = await genSalt(10);
       user.password = await hash(user.password, salt);
   
       try {
         await user.save();
+        await sendWelcomeEmail(user.email, user.username);
         return createSuccessResponse(
           "User registered successfully. You can now login",
           {},
