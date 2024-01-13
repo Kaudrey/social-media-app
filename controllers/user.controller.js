@@ -103,3 +103,18 @@ exports.deleteUser = async (req, res) => {
     res.status(500).json({ message: "Error removing user and associated from the system" });
   }
 };
+
+exports.getUserSuggestions = async (req, res) => {
+  try {
+    const authUserId = req.user._id;
+    const suggestedUsers = await User.find({ _id: { $ne: authUserId } })
+      .select("username createdAt")
+      .limit(5);
+
+    res.status(200).json({ suggestions: suggestedUsers });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error getting user suggestions" });
+  }
+};
+
