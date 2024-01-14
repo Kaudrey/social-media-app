@@ -88,7 +88,17 @@ exports.deletePost = async (req, res) => {
 
         const paginatedPosts = await Post.paginate({}, options);
 
-        return createSuccessResponse("Posts retrieved successfully", paginatedPosts, res);
+        const modifiedPosts = paginatedPosts.docs.map(post => ({
+            userId: post.userId,
+            title: post.title,
+            description: post.description,
+            createdAt:post.createdAt
+        }));
+
+        return createSuccessResponse("Posts retrieved successfully", {
+            ...paginatedPosts,
+            docs: modifiedPosts,
+        }, res);
     } catch (ex) {
         return serverErrorResponse(ex, res);
     }

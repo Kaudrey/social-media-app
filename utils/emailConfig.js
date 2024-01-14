@@ -16,7 +16,7 @@ async function sendWelcomeEmail(email, username) {
       from: process.env.USER,
       to: email,
       subject: 'Welcome to our app',
-      text: `Hello ${username},\n\nThank you for registering on our socail media app!`,
+      text: `Hello ${username},\n\nThank you for registering on our social media app!`,
     };
 
     await mailTransporter.sendMail(mailDetails);
