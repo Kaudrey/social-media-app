@@ -2,12 +2,9 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
-  "engines":{
-"node": "18.x"
-  },
+  "main": "index.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "nodemon index.js"
   },
   "dependencies": {
     "abbrev": "^1.1.1",
