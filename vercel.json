@@ -1,0 +1,28 @@
+{
+    "version": 2,
+    "builds": [
+      {
+        "src": "routes/**/*.js",
+        "use": "@now/node-server"
+      },
+      {
+        "src": "swagger.json",
+        "use": "@now/static"
+      }
+    ],
+    "routes": [
+      {
+        "src": "/routes/(.*)",
+        "dest": "/routes/$1"
+      },
+      {
+        "src": "/swagger",
+        "dest": "/swagger.json"
+      },
+      {
+        "src": "/(.*)",
+        "dest": "/$1"
+      }
+    ]
+  }
+  
